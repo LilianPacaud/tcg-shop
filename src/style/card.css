@@ -3,6 +3,8 @@
   cursor: pointer;
   transition: 0.4s;
   max-width: calc(12% - 17px);
+  display: flex;
+  flex-direction: column;
 }
   
 .card:hover {

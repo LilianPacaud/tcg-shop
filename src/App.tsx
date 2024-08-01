@@ -3,7 +3,10 @@ import './App.css';
 import { RotatingLines } from 'react-loader-spinner';
 import Card from './components/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faCartArrowDown, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearCart, removeItem, selectCartItems, selectTotalPrice } from './redux/cartSlice';
+import { RootState } from './redux/store';
 
 function App() {
   const [data, setData] = useState<any[]>([]);
@@ -37,6 +40,18 @@ function App() {
     fetchData();
   }, [currentPage]);
 
+  const totalPrice = useSelector((state: RootState) => selectTotalPrice(state));
+  const cartItems = useSelector(selectCartItems);
+  const dispatch = useDispatch();
+
+  const handleRemove = (item: any) => {
+    dispatch(removeItem(item));
+  };
+
+  const handleClear = () => {
+    dispatch(clearCart());
+  };
+
 
   if (loading) return (
     <div className='loadingElement'>
@@ -51,28 +66,33 @@ function App() {
   )
 
   return (
-    <div style={{width: '100%'}}>
-    <ul className='cardList'>
-      {data.map(card => (
-        <Card card={card}></Card>
-      ))}
-    </ul>
-    <div className='divBtnPage'>
-      <button className='btnPage'
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-        disabled={currentPage === 1}
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
-      <span>{currentPage} / {totalPages}</span>
-      <button className='btnPage'
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-        disabled={currentPage === totalPages}
-      >
-         <FontAwesomeIcon icon={faChevronRight} />
-      </button>
-    </div>
-  </div>
+      <div style={{width: '100%'}}>
+        <div style={{right: 0, position: 'fixed'}}>
+          <FontAwesomeIcon style={{ paddingRight: 5 }} icon={faCartArrowDown}/>
+          <span style={{ paddingRight: 5 }}>{cartItems.length}</span>
+          <div>${totalPrice.toFixed(2)}</div>
+        </div>
+        <ul className='cardList'>
+          {data.map(card => (
+            <Card card={card}></Card>
+          ))}
+        </ul>
+        <div className='divBtnPage'>
+          <button className='btnPage'
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+            disabled={currentPage === 1}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
+          <span>{currentPage} / {totalPages}</span>
+          <button className='btnPage'
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
+            disabled={currentPage === totalPages}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
+        </div>
+      </div>
   );
 }
 
