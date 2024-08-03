@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
-import CartInfos from './CartInfos';
-import ButtonsPage from './ButtonsPage';
-import CardList from './CardList';
-import { CardType } from '../type';
+import CartInfos from '../components/CartInfos';
+import ButtonsPage from '../components/ButtonsPage';
+import CardList from '../components/CardList';
+import { CardType, CartItem } from '../type';
+import { Link } from 'react-router-dom';
+import { AppDispatch } from '../redux/store';
+import '../style/CartStyle.css'
 
-const Home: React.FC<any> = ({ cart, dispatch, cartAmount }) => { 
+interface HomeProps {
+    cart: CartItem[],
+    dispatch: AppDispatch,
+    cartAmount: number
+  }
+
+const Home: React.FC<HomeProps> = ({ cart, dispatch, cartAmount }) => { 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -42,7 +51,7 @@ const Home: React.FC<any> = ({ cart, dispatch, cartAmount }) => {
   return (
       <div className='main'>
         <h1 className='title'>TCG SHOP</h1>
-        <CartInfos cart={cart} cartAmount={cartAmount} dispatch={dispatch}/>
+        <Link className='linkCart' to="/cart"><CartInfos cart={cart} cartAmount={cartAmount} dispatch={dispatch}/></Link>
         <CardList dispatch={dispatch} data={data} loading={loading}/>
         <ButtonsPage setCurrentPage={setCurrentPage} currentPage={currentPage} totalPages={totalPages}/>
       </div>

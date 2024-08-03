@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/CardStyle.css'
 import { useSelector } from 'react-redux';
-import { addItem, removeItem, selectCardsCountById } from '../redux/cartSlice';
+import { addItem, cardCount, removeItem } from '../redux/cartSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { AppDispatch, RootState } from '../redux/store';
@@ -22,7 +22,7 @@ const Card: React.FC<CardProps> = ({ card, dispatch }) => {
     dispatch(removeItem(item));
   };
 
-  const cardCounts = useSelector((state: RootState) => selectCardsCountById(card.id)(state));
+  const cardCounts = useSelector((state: RootState) => cardCount(state, card));
 
   return (
     <div className='card'>

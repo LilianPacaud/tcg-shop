@@ -6,7 +6,7 @@ const localStorageMiddleware: Middleware = store => next => (action: any) => {
   if (action.type.startsWith('cart/')) {
     const state = store.getState();
     const cart: CartState['cards'] = state.cart.cards;
-    const totalPrice = cart.reduce((total, card) => total + card.cardmarket.prices.averageSellPrice, 0);
+    const totalPrice = cart.reduce((total, { card, count }) => total + card.cardmarket.prices.averageSellPrice * count, 0);
 
     localStorage.setItem('cart', JSON.stringify(cart));
     localStorage.setItem('totalPrice', totalPrice.toString());

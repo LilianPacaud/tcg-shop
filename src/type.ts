@@ -13,7 +13,12 @@ export interface CardType {
   };
 }
   
+export interface CartItem {
+  card: CardType;
+  count: number;
+}
+
 export interface CartState {
-  cards: CardType[];
+  cards: CartItem[];
 }
   

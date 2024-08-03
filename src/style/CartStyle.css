@@ -13,15 +13,13 @@
     padding-right: 5px;
 }
 
-.cartInfo .close {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-}
-
 .cartInfo .separator {
     margin: 5px 0;
     width: 100%;
     height: 2px;
     background: black;
+}
+
+.linkCart {
+    color: black;
 }
