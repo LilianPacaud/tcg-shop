@@ -1,43 +1,45 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from './store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CartState, CardType } from '../type';
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  cardmarket: any
-}
-
-interface CartState {
-  items: CartItem[];
-}
-
-const initialState: CartState = {
-  items: []
+// Initialize state from localStorage
+const loadCart = (): CardType[] => {
+  const savedCards = localStorage.getItem('cart');
+  return savedCards ? JSON.parse(savedCards) : [];
 };
 
+const initialState: CartState = {
+  cards: loadCart(),
+};
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<CartItem>) => {
-      state.items.push(action.payload);
+    addItem: (state, action: PayloadAction<CardType>) => {
+      state.cards.push(action.payload);
     },
-    removeItem: (state, action: PayloadAction<CartItem>) => {
-      state.items = state.items.filter(item => item.id !== action.payload.id);
+    removeItem: (state, action: PayloadAction<CardType>) => {
+      const { id } = action.payload;
+      const index = state.cards.findIndex(card => card.id === id);
+      if (index !== -1) {
+        state.cards.splice(index, 1);
+      }
     },
     clearCart: (state) => {
-      state.items = [];
-    }
-  }
+      state.cards = [];
+    },
+  },
 });
 
-export const selectTotalPrice = (state: RootState): number => {
-  return state.cart.items.reduce((total, item) => total + item.cardmarket.prices.averageSellPrice, 0);
+export const selectCartAmount = (state: { cart: CartState }): number => {
+  return state.cart.cards.reduce((total, item) => total + item.cardmarket.prices.averageSellPrice, 0);
 };
 
-export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
+export const selectCart = (state: { cart: CartState }): CardType[] => state.cart.cards;
 export const { addItem, removeItem, clearCart } = cartSlice.actions;
+
+export const selectCardsCountById = (id: number) => (state: { cart: CartState }): number => {
+  return state.cart.cards.filter(card => card.id === id).length;
+};
 
 export default cartSlice.reducer;

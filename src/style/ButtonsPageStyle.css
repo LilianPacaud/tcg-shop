@@ -1,0 +1,11 @@
+.divBtnPage{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.btnPage {
+background: inherit;
+border: 0;
+cursor: pointer;
+}

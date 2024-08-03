@@ -1,31 +1,36 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import './style/App.css';
+import './style/CartStyle.css'
 import { RotatingLines } from 'react-loader-spinner';
-import Card from './components/Card';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartArrowDown, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCart, removeItem, selectCartItems, selectTotalPrice } from './redux/cartSlice';
-import { RootState } from './redux/store';
+import { selectCart, selectCartAmount } from './redux/cartSlice';
+import { AppDispatch, RootState } from './redux/store';
+import { CardType } from './type';
+import CartInfos from './components/CartInfos';
+import ButtonsPage from './components/ButtonsPage';
+import Card from './components/Card';
 
 function App() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<CardType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
+    // Call API to get all Cards by page
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`https://api.pokemontcg.io/v2/cards?page=${currentPage.toString()}&select=id,name,images&pageSize=100`, {
+        const response = await fetch(`${apiUrl}?page=${currentPage.toString()}&select=id,name,images,cardmarket&pageSize=100`, {
           method: 'GET',
           headers: {
-            'X-Api-Key': '5dc1c464-5607-4110-85a0-d6821c699162'
+            'X-Api-Key': process.env.REACT_APP_API_KEY ?? ''
           }
         })
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network response error');
         }
         const result = await response.json();
         setData(result.data);
@@ -40,19 +45,12 @@ function App() {
     fetchData();
   }, [currentPage]);
 
-  const totalPrice = useSelector((state: RootState) => selectTotalPrice(state));
-  const cartItems = useSelector(selectCartItems);
-  const dispatch = useDispatch();
+  // Use Redux and localStorage to store cart
+  const dispatch: AppDispatch = useDispatch();
+  const cart = useSelector((state: RootState) => selectCart(state));
+  const cartAmount = useSelector((state: RootState) => selectCartAmount(state));
 
-  const handleRemove = (item: any) => {
-    dispatch(removeItem(item));
-  };
-
-  const handleClear = () => {
-    dispatch(clearCart());
-  };
-
-
+  // Loader on waiting API result
   if (loading) return (
     <div className='loadingElement'>
       <RotatingLines
@@ -66,32 +64,15 @@ function App() {
   )
 
   return (
-      <div style={{width: '100%'}}>
-        <div style={{right: 0, position: 'fixed'}}>
-          <FontAwesomeIcon style={{ paddingRight: 5 }} icon={faCartArrowDown}/>
-          <span style={{ paddingRight: 5 }}>{cartItems.length}</span>
-          <div>${totalPrice.toFixed(2)}</div>
-        </div>
+      <div className='main'>
+        <h1 className='title'>TCG SHOP</h1>
+        <CartInfos cart={cart} cartAmount={cartAmount} dispatch={dispatch}/>
         <ul className='cardList'>
           {data.map(card => (
-            <Card card={card}></Card>
+            <Card card={card} dispatch={dispatch} />
           ))}
         </ul>
-        <div className='divBtnPage'>
-          <button className='btnPage'
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-            disabled={currentPage === 1}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-          <span>{currentPage} / {totalPages}</span>
-          <button className='btnPage'
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-            disabled={currentPage === totalPages}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
-        </div>
+        <ButtonsPage setCurrentPage={setCurrentPage} currentPage={currentPage} totalPages={totalPages}/>
       </div>
   );
 }
