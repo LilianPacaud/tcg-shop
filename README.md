@@ -1,4 +1,5 @@
 # TCG SHOP
+![Card List](public/cardList.png)
 
 ### Welcome to this React 'TCG Shop' project
 - This is an e-commerce site for the pokemon card game (TCG), with the following functionalities:
@@ -9,6 +10,8 @@
   - Validate cart
   - Be happy :)
 - This project was created using the Pokemon TCG API (https://dev.pokemontcg.io/)
+
+![Cart](public/cart.png)
 
 ## How to run the project
 
