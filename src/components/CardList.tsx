@@ -3,7 +3,9 @@ import '../style/CardStyle.css'
 import { RotatingLines } from 'react-loader-spinner';
 import { CardType } from '../type';
 import Card from './Card';
-import { AppDispatch } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
+import { selectSearchQuery } from '../redux/searchSlice';
+import { useSelector } from 'react-redux';
 
 interface CardListProps {
   dispatch: AppDispatch,
@@ -12,6 +14,12 @@ interface CardListProps {
 }
 
 const CardList: React.FC<CardListProps> = ({ dispatch, data, loading }) => { 
+
+  const searchQuery = useSelector((state: RootState) => selectSearchQuery(state));
+
+  const filteredItems = data.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
     
   // Loader on waiting API result
   if (loading) return (
@@ -29,7 +37,7 @@ const CardList: React.FC<CardListProps> = ({ dispatch, data, loading }) => {
   return (
       <div className='cardListBlock'>
         <ul className='cardList'>
-          {data.map(card => (
+          {filteredItems.map(card => (
             <Card card={card} dispatch={dispatch} />
           ))}
         </ul>

@@ -9,15 +9,10 @@ import { AppDispatch } from '../redux/store';
 interface CartInfosProps {
   cart: CartItem[],
   cartAmount: number,
-  dispatch: AppDispatch
 }
 
 // Component for cart infos in cards page
-const CartInfos: React.FC<CartInfosProps> = ({ cart, cartAmount, dispatch }) => { 
-  const handleClearCart = () => {
-    dispatch(clearCart());
-  };
-  
+const CartInfos: React.FC<CartInfosProps> = ({ cart, cartAmount }) => { 
   return (
     <div className='cartInfo'>
       <FontAwesomeIcon className='icon' icon={faCartArrowDown}/>

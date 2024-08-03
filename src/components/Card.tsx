@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({ card, dispatch }) => {
     <div className='card'>
       <img alt={card.name} src={card.images.large}></img>
       <div className='infos'>
-        <span>${card.cardmarket?.prices.averageSellPrice}</span>
+        <span>${card.cardmarket?.prices?.averageSellPrice}</span>
         <div>
           <FontAwesomeIcon className='icon' icon={faPlus} onClick={() => handleAddItem(card)} />
           <span className='count'>{cardCounts}</span>

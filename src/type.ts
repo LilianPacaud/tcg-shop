@@ -1,7 +1,6 @@
 export interface CardType {
   id: number;
   name: string;
-  price: number;
   images: {
     small: string
     large: string

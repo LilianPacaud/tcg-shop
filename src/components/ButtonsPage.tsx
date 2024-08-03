@@ -17,14 +17,14 @@ const ButtonsPage: React.FC<ButtonsPageProps> = ({ setCurrentPage, currentPage, 
         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
         disabled={currentPage === 1}
         >
-        <FontAwesomeIcon icon={faChevronLeft} />
+        <FontAwesomeIcon size={'xl'} icon={faChevronLeft} />
         </button>
         <span>{currentPage} / {totalPages}</span>
         <button className='btnPage'
         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
         disabled={currentPage === totalPages}
         >
-        <FontAwesomeIcon icon={faChevronRight} />
+        <FontAwesomeIcon size={'xl'} icon={faChevronRight} />
         </button>
     </div>
   );
